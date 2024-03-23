@@ -18,14 +18,19 @@ def index():
     return render_template('index.html', is_logged_in=is_logged_in)
 
 
+@bp.route('/main')
+def main():
+    return render_template('lyear_main.html')
+
+
 @bp.route('/profile')
 def profile():
-    if 'admin_id' in session:
-        is_logged_in = True
-    else:
-        is_logged_in = False
+    return render_template('lyear_pages_profile.html')
 
-    return render_template('profile.html', is_logged_in=is_logged_in)
+
+@bp.route('/edit_pwd')
+def edit_pwd():
+    return render_template('lyear_pages_edit_pwd.html')
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -35,7 +40,7 @@ def login():
     :return:
     """
     if request.method == 'GET':
-        return render_template('admin/login_admin.html')
+        return render_template('lyear_pages_login.html')
     else:
         form = AdminLoginForm(request.form)
         if form.validate():
@@ -60,6 +65,7 @@ def login():
             return render_template('admin/login_admin.html', error=error)
 
 
+'''
 @bp.route('/logout')
 def logout():
     session.pop('admin_id', None)
@@ -138,3 +144,5 @@ def manage_admin():
         return render_template('admin/manage_admin.html', is_logged_in=is_logged_in)
     else:
         return render_template('admin/login_admin.html')
+
+'''
