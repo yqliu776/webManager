@@ -25,12 +25,12 @@ def main():
 
 @bp.route('/profile')
 def profile():
-    return render_template('lyear_pages_profile.html')
+    return render_template('pages/lyear_pages_profile.html')
 
 
 @bp.route('/edit_pwd')
 def edit_pwd():
-    return render_template('lyear_pages_edit_pwd.html')
+    return render_template('pages/lyear_pages_edit_pwd.html')
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -40,7 +40,7 @@ def login():
     :return:
     """
     if request.method == 'GET':
-        return render_template('lyear_pages_login.html')
+        return render_template('pages/lyear_pages_login.html')
     else:
         form = AdminLoginForm(request.form)
         if form.validate():
