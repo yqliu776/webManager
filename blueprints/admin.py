@@ -74,29 +74,29 @@ def edit_pwd():
         admin_id = session.get('admin_id')
         admin = AdminModel.query.get(admin_id)
         if not admin_id:
-            return render_template('pages/lyear_pages_edit_pwd.html', success=False)
+            return render_template('pages/lyear_pages_login.html')
 
         if not old_password or not new_password or not confirm_password:
-            flash('密码不能为空。')
-            return render_template('pages/lyear_pages_edit_pwd.html', success=False)
+            flash('密码不能为空。', 'danger')
+            return render_template('pages/lyear_pages_edit_pwd.html')
 
-        if not admin or not check_password_hash(admin.password, old_password):
-            flash('旧密码错误。')
-            return render_template('pages/lyear_pages_edit_pwd.html', success=False)
+        if not check_password_hash(admin.password, old_password):
+            flash('旧密码错误。', 'danger')
+            return render_template('pages/lyear_pages_edit_pwd.html')
 
         if new_password != confirm_password:
-            flash('两次输入的新密码不一致。')
-            return render_template('pages/lyear_pages_edit_pwd.html', success=False)
+            flash('两次输入的新密码不一致。', 'danger')
+            return render_template('pages/lyear_pages_edit_pwd.html')
 
         if old_password == confirm_password:
-            flash('新密码不能与旧密码相同。')
-            return render_template('pages/lyear_pages_edit_pwd.html', success=False)
+            flash('新密码不能与旧密码相同。', 'danger')
+            return render_template('pages/lyear_pages_edit_pwd.html')
 
         admin.password = generate_password_hash(new_password)
         db.session.commit()
 
-        flash('密码修改成功。')
-        return render_template('pages/lyear_pages_edit_pwd.html', success=True)
+        flash('密码修改成功。', 'success')
+        return render_template('pages/lyear_pages_edit_pwd.html')
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -158,21 +158,21 @@ def add_admin():
             scalar = db.session.query(exists().where(AdminModel.adminname == adminname))
             if scalar.scalar():
                 # 如果已经存在该管理员，则返回错误页面
-                flash('该管理员已经存在！')
-                return render_template('pages/lyear_pages_add_admin.html', success=False)
+                flash('该管理员已经存在！', 'danger')
+                return render_template('pages/lyear_pages_add_admin.html')
             else:
                 hash_pwd = generate_password_hash(password)
                 # 创建管理员对象，并将其添加到数据库中
-                admin = AdminModel(adminname=adminname, password=hash_pwd, permission=permission, nickname=adminname, brief="", avatar="avatar.jpg")
+                admin = AdminModel(adminname=adminname, password=hash_pwd, permission=permission, avatar="avatar.jpg")
                 db.session.add(admin)
                 db.session.commit()
                 # 添加成功，返回反馈信息
-                flash('添加成功！')
-                return render_template('pages/lyear_pages_add_admin.html', success=True)
+                flash('添加成功！', 'danger')
+                return render_template('pages/lyear_pages_add_admin.html')
         else:
             # 如果表单格式不正确，则返回错误页面
-            flash('用户名或密码格式错误！')
-            return render_template('pages/lyear_pages_add_admin.html', success=False)
+            flash('用户名或密码格式错误！', 'danger')
+            return render_template('pages/lyear_pages_add_admin.html')
 
 
 @bp.route('/logout')
@@ -201,11 +201,11 @@ def change_avatar():
                 # 更新数据库中的头像信息
                 admin.avatar = filename
                 db.session.commit()
-                flash('头像更新成功！')
-                return render_template('pages/lyear_pages_profile.html', success=True, admin=admin)
+                flash('头像更新成功！', 'danger')
+                return render_template('pages/lyear_pages_profile.html', admin=admin)
             else:
-                flash('请上传符合要求的图片文件！')
-                return render_template('pages/lyear_pages_profile.html', success=False, admin=admin)
+                flash('请上传符合要求的图片文件！', 'danger')
+                return render_template('pages/lyear_pages_profile.html', admin=admin)
     else:
         return redirect(url_for('admin.login'))
 

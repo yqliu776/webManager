@@ -18,14 +18,12 @@ class AdminModel(db.Model):
 
     def __init__(self, adminname, password, nickname, brief, avatar, permission):
         """
-        To fix error:__init__() takes 1 positional argument but 3 were given
+        To fix error:__init__() takes 1 positional argument but 4 were given
         :param adminname:
         :param password:
         """
         self.adminname = adminname
         self.password = password
-        self.nickname = nickname
-        self.brief = brief
         self.avatar = avatar
         self.permission = permission
 

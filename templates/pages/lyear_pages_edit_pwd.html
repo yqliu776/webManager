@@ -10,6 +10,7 @@
 <meta name="author" content="yinqi">
 <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
 <link href="../../static/css/materialdesignicons.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../../static/js/jconfirm/jquery-confirm.min.css">
 <link href="../../static/css/style.min.css" rel="stylesheet">
 </head>
   
@@ -21,7 +22,7 @@
       <div class="card">
         <div class="card-body">
           
-          <form method="post" action="{{ url_for('admin.edit_pwd') }}" class="site-form">
+          <form method="post" action="{{ url_for('admin.edit_pwd') }}" class="site-form" id="changePasswordForm">
             <div class="form-group">
               <label for="old-password">旧密码</label>
               <input type="password" class="form-control" name="oldpwd" id="old-password" placeholder="输入账号的原登录密码">
@@ -34,22 +35,16 @@
               <label for="confirm-password">确认新密码</label>
               <input type="password" class="form-control" name="confirmpwd" id="confirm-password" placeholder="请输入正确的邮箱地址">
             </div>
-              {% with messages = get_flashed_messages() %}
-                  {% if messages %}
-                      {% for message in messages %}
-                        {% if success %}
-                          <div class="alert alert-success" role="alert">
-                              {{ message }}
-                          </div>
-                        {% else %}
-                          <div class="alert alert-danger" role="alert">
-                              {{ message }}
-                          </div>
-                        {% endif %}
-                      {% endfor %}
-                  {% endif %}
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
               {% endwith %}
-            <button type="submit" class="btn btn-primary">修改密码</button>
+            <button type="submit" class="btn btn-primary ">修改密码</button>
           </form>
  
         </div>
@@ -62,6 +57,33 @@
 
 <script type="text/javascript" src="../../static/js/jquery.min.js"></script>
 <script type="text/javascript" src="../../static/js/bootstrap.min.js"></script>
+<script src="../../static/js/jconfirm/jquery-confirm.min.js"></script>
 <script type="text/javascript" src="../../static/js/main.min.js"></script>
+<script>
+    document.getElementById('changePasswordForm').addEventListener('submit', function(event) {
+        var newPassword = document.getElementById('new-password').value;
+        if (newPassword.length < 6) {
+            $.confirm({
+                      title: '错误提示',
+                      content: '新密码长度必须至少为六位。',
+                      type: 'red',
+                      typeAnimated: true,
+                      buttons: {
+                          tryAgain: {
+                              text: '知道了',
+                              btnClass: 'btn-red',
+                              action: function(){
+                              }
+                          },
+                          close: {
+                              text: '关闭'
+                    }
+                }
+            });
+            event.preventDefault();  // 阻止表单提交
+        }
+    });
+</script>
+
 </body>
 </html>

@@ -29,17 +29,3 @@ class AdminAddForm(wtforms.Form):
     Permission = wtforms.IntegerField(validators=[])
 
 
-class UserLoginForm(wtforms.Form):
-    """
-    user 登陆 表单
-    """
-    username = wtforms.StringField(validators=[length(min=3, max=25)])
-    password = wtforms.StringField(validators=[length(min=6, max=16)])
-
-
-class UserRegisterForm(wtforms.Form):
-    """
-    user 注册 表单
-    """
-    username = wtforms.StringField(validators=[length(min=3, max=25)])
-    password = wtforms.StringField(validators=[length(min=6, max=16)])
