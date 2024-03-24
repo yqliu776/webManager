@@ -16,7 +16,7 @@ class AdminModel(db.Model):
     avatar = db.Column(db.String(200))
     permission = db.Column(db.Integer, primary_key=False, autoincrement=False)
 
-    def __init__(self, adminname, password, nickname, brief, avatar, permission):
+    def __init__(self, adminname, password, avatar, permission):
         """
         To fix error:__init__() takes 1 positional argument but 4 were given
         :param adminname:
