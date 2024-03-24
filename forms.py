@@ -26,7 +26,7 @@ class AdminAddForm(wtforms.Form):
     """
     adminname = wtforms.StringField(validators=[length(min=3, max=25)])
     password = wtforms.StringField(validators=[length(min=6, max=16)])
-    Permission = wtforms.StringField(validators=[length(min=1, max=100)])
+    Permission = wtforms.IntegerField(validators=[])
 
 
 class UserLoginForm(wtforms.Form):

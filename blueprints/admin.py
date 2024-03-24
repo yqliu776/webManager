@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, request, session, redirect, url_for, flash
+from flask import Blueprint, render_template, request, session, redirect, url_for, flash, current_app
 from moduls import AdminModel
-from forms import AdminLoginForm, AdminProfileForm
+from sqlalchemy.sql import exists
+from forms import AdminLoginForm, AdminProfileForm, AdminAddForm
 from werkzeug.security import check_password_hash, generate_password_hash
 from exts import db
-from sqlalchemy.sql import exists
+import os
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -50,10 +51,9 @@ def profile():
                 flash('个人资料已更新！')
                 return render_template('pages/lyear_pages_profile.html', admin=admin, success=True)
             else:
-                flash('邮箱格式错误！')
+                flash('邮箱格式错误或昵称简介字数过多！')
                 return render_template('pages/lyear_pages_profile.html', admin=admin, success=False)
         # 如果是 GET 请求，或者 POST 请求处理完毕后，渲染个人资料页面
-        print(admin.brief)
         return render_template('pages/lyear_pages_profile.html', admin=admin)
     else:
         # 如果用户未登录，重定向到登录页面
@@ -64,8 +64,7 @@ def profile():
 def edit_pwd():
     if request.method == 'GET':
         if 'admin_id' in session:
-            is_logged_in = True
-            return render_template('pages/lyear_pages_edit_pwd.html', is_logged_in=is_logged_in)
+            return render_template('pages/lyear_pages_edit_pwd.html')
         else:
             return render_template('pages/lyear_pages_login.html')
     else:
@@ -75,7 +74,6 @@ def edit_pwd():
         admin_id = session.get('admin_id')
         admin = AdminModel.query.get(admin_id)
         if not admin_id:
-            flash('未登录或会话已过期，请重新登录。')
             return render_template('pages/lyear_pages_edit_pwd.html', success=False)
 
         if not old_password or not new_password or not confirm_password:
@@ -132,6 +130,51 @@ def login():
             return render_template('pages/lyear_pages_login.html')
 
 
+@bp.route('/add_admin', methods=['GET', 'POST'])
+def add_admin():
+    """
+    Add an administrator
+    :return:
+    """
+    # 如果是 GET 请求，则返回添加管理员的页面
+    if request.method == 'GET':
+        if 'admin_id' in session:
+            if session.get('permission') == 1:
+                return render_template('pages/lyear_pages_add_admin.html')
+            else:
+                flash('用户权限不足！')
+                return render_template('pages/lyear_pages_error.html')
+        else:
+            return render_template('pages/lyear_pages_login.html')
+    else:
+        # 获取管理员添加表单，并验证表单格式是否正确
+        form = AdminAddForm(request.form)
+        if form.validate():
+            # 获取管理员的姓名、密码和权限等信息
+            adminname = form.adminname.data
+            password = form.password.data
+            permission = form.Permission.data
+            # 查询数据库中是否已经存在该管理员
+            scalar = db.session.query(exists().where(AdminModel.adminname == adminname))
+            if scalar.scalar():
+                # 如果已经存在该管理员，则返回错误页面
+                flash('该管理员已经存在！')
+                return render_template('pages/lyear_pages_add_admin.html', success=False)
+            else:
+                hash_pwd = generate_password_hash(password)
+                # 创建管理员对象，并将其添加到数据库中
+                admin = AdminModel(adminname=adminname, password=hash_pwd, permission=permission, nickname=adminname, brief="", avatar="avatar.jpg")
+                db.session.add(admin)
+                db.session.commit()
+                # 添加成功，返回反馈信息
+                flash('添加成功！')
+                return render_template('pages/lyear_pages_add_admin.html', success=True)
+        else:
+            # 如果表单格式不正确，则返回错误页面
+            flash('用户名或密码格式错误！')
+            return render_template('pages/lyear_pages_add_admin.html', success=False)
+
+
 @bp.route('/logout')
 def logout():
     session.pop('admin_id', None)
@@ -140,70 +183,38 @@ def logout():
     return redirect(url_for('admin.index'))
 
 
-'''
-@bp.route('/add_admin', methods=['GET', 'POST'])
-def add_admin():
-    """
-    Add an administrator
-    :return:
-    """
-    # 如果是 GET 请求，则返回添加管理员的页面
+@bp.route('/change_avatar', methods=['POST'])
+def change_avatar():
     if 'admin_id' in session:
-        is_logged_in = True
-    else:
-        is_logged_in = False
-    if request.method == 'GET':
-        if is_logged_in:
-            return render_template('admin/add_admin.html', is_logged_in=is_logged_in)
-        else:
-            return render_template('admin/index_admin.html', is_logged_in=is_logged_in)
-    else:
-        # 如果用户权限不足，则返回错误页面
-        if session.get('permission') != 0:
-            error = 'PermissionError: The permissions are insufficient, please contact the super administrator'
-            return render_template('admin/add_admin.html', error=error)
-        else:
-            # 获取管理员添加表单，并验证表单格式是否正确
-            form = AdminAddForm(request.form)
-            if form.validate():
-                # 获取管理员的姓名、密码和权限等信息
-                adminname = form.adminname.data
-                password = form.password.data
-                permission = form.Permission.data
-                # 查询数据库中是否已经存在该管理员
-                scalar = db.session.query(exists().where(AdminModel.adminname == adminname))
-                if scalar.scalar():
-                    # 如果已经存在该管理员，则返回错误页面
-                    error = 'NameError: This administrator already exists！'
-                    return render_template('admin/add_admin.html', error=error)
-                else:
-                    # 根据权限字符串转化为数字
-                    match permission:
-                        case "SuperRoot":
-                            permission = 0
-                        case "NormalAdmin":
-                            permission = 1
-                        case "Observer":
-                            permission = 2
-                        case None:
-                            # 如果没有选择管理员权限，则返回错误页面
-                            error = 'PermissionError: Please select an administrator privilege level！'
-                            return render_template('admin/add_admin.html', error=error)
-                    # 对密码进行加密处理
-                    hash_pwd = generate_password_hash(password)
-                    # 创建管理员对象，并将其添加到数据库中
-                    admin = AdminModel(adminname=adminname, password=hash_pwd, permission=permission)
-                    db.session.add(admin)
-                    db.session.commit()
-                    # 添加成功，返回反馈信息
-                    feedback = 'Added successfully！'
-                    return render_template('admin/add_admin.html', feedback=feedback)
+        admin_id = session.get('admin_id')
+        admin = AdminModel.query.filter_by(id=admin_id).first()
+        if admin:
+            file = request.files.get('avatar')
+            if file and allowed_file(file.filename):
+                filename = 'Avatar---' + str(admin.id)
+                print(filename)
+                # 构建保存路径
+                save_path = os.path.join(current_app.static_folder, 'images', 'users', filename)
+                print(save_path)
+                # 保存文件
+                file.save(save_path)
+                # 更新数据库中的头像信息
+                admin.avatar = filename
+                db.session.commit()
+                flash('头像更新成功！')
+                return render_template('pages/lyear_pages_profile.html', success=True, admin=admin)
             else:
-                # 如果表单格式不正确，则返回错误页面
-                error = 'FormatError: The account or password format is incorrect！ '
-                return render_template('admin/add_admin.html', error=error)
+                flash('请上传符合要求的图片文件！')
+                return render_template('pages/lyear_pages_profile.html', success=False, admin=admin)
+    else:
+        return redirect(url_for('admin.login'))
 
 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
+
+
+'''
 @bp.route('/manage_admin', methods=['GET'])
 def manage_admin():
     if 'admin_id' in session:

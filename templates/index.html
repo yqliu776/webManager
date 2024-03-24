@@ -133,13 +133,13 @@
               <ul class="topbar-right">
                 <li class="dropdown dropdown-profile">
                   <a href="javascript:void(0)" data-toggle="dropdown">
-                    <img class="img-avatar img-avatar-48 m-r-10" src="../static/images/users/avatar.jpg" alt="后台管理模板" />
+                    <img class="img-avatar img-avatar-48 m-r-10" src="../static/images/users/{{ admin.avatar }}" alt="后台管理模板" />
                     <span>{{ admin.adminname }}<span class="caret"></span></span>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right">
                     <li> <a class="multitabs" data-url="profile" href="javascript:void(0)"><i class="mdi mdi-account"></i> 个人信息</a> </li>
                     <li> <a class="multitabs" data-url="edit_pwd" href="javascript:void(0)"><i class="mdi mdi-lock-outline"></i> 修改密码</a> </li>
-                    <li> <a target="blank" href="#"><i class="mdi mdi-delete"></i> 进入店铺</a></li>
+                    <li> <a class="multitabs" data-url="add_admin" href="javascript:void(0)"><i class="mdi mdi-lock-outline"></i> 添加店员</a></li>
                     <li class="divider"></li>
                     <li> <a href="{{ url_for('admin.logout') }}"><i class="mdi mdi-logout-variant"></i> 退出登录</a> </li>
                   </ul>
@@ -281,6 +281,39 @@
     <script type="text/javascript" src="../static/js/perfect-scrollbar.min.js"></script>
     <script type="text/javascript" src="../static/js/bootstrap-multitabs/multitabs.js"></script>
     <script type="text/javascript" src="../static/js/index.min.js"></script>
+    <script>
+        window.addEventListener('message', function(event) {
+            // 检查消息内容，执行相应操作
+            if (event.data.action === 'closeCurrentTab') {
+                // 找到当前活动的标签页和对应的标签
+                var activeTabPane = document.querySelector('.tab-content .tab-pane.active');
+                var activeTabLink = document.querySelector('.nav-tabs .active');
+
+                // 移除标签页内容和标签
+                if (activeTabPane) {
+                    activeTabPane.remove();
+                }
+                if (activeTabLink) {
+                    activeTabLink.remove();
+                }
+                // 检查是否还有其他标签页，如果有，则切换到第一个标签页
+                var remainingTabs = document.querySelectorAll('.tab-pane');
+                if (remainingTabs.length > 0) {
+                    remainingTabs[0].classList.add('active');
+                    // 如果使用了 iframe，还需要切换 iframe 的显示
+                    var remainingIframes = document.querySelectorAll('iframe');
+                    if (remainingIframes.length > 0) {
+                        remainingIframes[0].style.display = 'block';
+                    }
+                } else {
+                    // 如果没有其他标签页，可以选择显示默认页面或保持原状
+                    // document.querySelector('.default-page').style.display = 'block';
+                }
+            }
+        });
+    </script>
+
+
 
 
 </body>

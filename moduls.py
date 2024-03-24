@@ -13,9 +13,10 @@ class AdminModel(db.Model):
     nickname = db.Column(db.String(200))
     brief = db.Column(db.String(200))
     email = db.Column(db.String(200))
+    avatar = db.Column(db.String(200))
     permission = db.Column(db.Integer, primary_key=False, autoincrement=False)
 
-    def __init__(self, adminname, password, nickname, brief, permission):
+    def __init__(self, adminname, password, nickname, brief, avatar, permission):
         """
         To fix error:__init__() takes 1 positional argument but 3 were given
         :param adminname:
@@ -25,6 +26,7 @@ class AdminModel(db.Model):
         self.password = password
         self.nickname = nickname
         self.brief = brief
+        self.avatar = avatar
         self.permission = permission
 
     def to_dict(self):

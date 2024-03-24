@@ -1,4 +1,4 @@
-<!--淘宝店：云码资源优选  https://shop188702750.taobao.com/search.htm?spm=a1z10.1-c.0.0.1221421cqgmNaI&search=y--><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh">
 <head>
 <meta charset="utf-8">
@@ -20,15 +20,18 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          
-          <div class="edit-avatar">
-            <img src="../../static/images/users/avatar.jpg" alt="..." class="img-avatar">
-            <div class="avatar-divider"></div>
-            <div class="edit-avatar-content">
-              <button class="btn btn-default">修改头像</button>
-              <p class="m-0">选择一张你喜欢的图片，裁剪后会自动生成264x264大小，上传图片大小不能超过2M。</p>
-            </div>
-          </div>
+            <form action="{{ url_for('admin.change_avatar') }}" method="post" enctype="multipart/form-data">
+                <div class="edit-avatar">
+                    <img src="../../static/images/users/{{ admin.avatar }}" alt="..." class="img-avatar">
+                    <div class="avatar-divider"></div>
+                    <div class="edit-avatar-content">
+                        <!-- 隐藏原始文件输入 -->
+                        <input type="file" name="avatar" accept="image/*" class="btn btn-default" id="fileInput" style="display: none;">
+                        <!-- 添加一个按钮来触发文件选择 -->
+                        <button type="button" class="btn btn-primary" id="uploadButton">上传头像</button>
+                    </div>
+                </div>
+            </form>
           <hr>
           <form method="post" action="{{ url_for('admin.profile') }}" class="site-form">
             <div class="form-group">
@@ -38,7 +41,13 @@
 
             <div class="form-group">
               <label for="permission">权限</label>
-              <input type="text" class="form-control" name="permission" id="permission" value="{{ admin.permission }}" disabled="disabled"/>
+                {% if admin.permission == 1 %}
+                    <input type="text" class="form-control" name="permission" id="permission" value="店长" disabled="disabled"/>
+                {% elif admin.permission == 2 %}
+                    <input type="text" class="form-control" name="permission" id="permission" value="一般店员" disabled="disabled"/>
+                {% elif admin.permission == 3 %}
+                    <input type="text" class="form-control" name="permission" id="permission" value="监督员" disabled="disabled"/>
+                {% endif %}
             </div>
 
             <div class="form-group">
@@ -89,5 +98,15 @@
 <script type="text/javascript" src="../../static/js/jquery.min.js"></script>
 <script type="text/javascript" src="../../static/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../../static/js/main.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#uploadButton').click(function() {
+            $('#fileInput').click();  // 触发文件选择窗口
+        });
+        $('#fileInput').change(function() {
+            $(this).closest('form').submit();  // 当文件选择后，自动提交表单
+        });
+    });
+</script>
 </body>
 </html>
