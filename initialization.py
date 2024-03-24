@@ -1,6 +1,6 @@
 from app import app
 from exts import db
-from models import AdminModel
+from moduls import AdminModel
 
 
 def add_admins():
@@ -18,11 +18,6 @@ def add_admins():
     db.session.commit()
     message = 'Success!'
     print(message)
-
-
-def generate_products(products):
-    category_list = ['女装','鞋子', '', '', '', '', '']
-    return 1
 
 
 if __name__ == '__main__':

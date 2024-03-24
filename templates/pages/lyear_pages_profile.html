@@ -30,24 +30,51 @@
             </div>
           </div>
           <hr>
-          <form method="post" action="#!" class="site-form">
+          <form method="post" action="{{ url_for('admin.profile') }}" class="site-form">
             <div class="form-group">
               <label for="username">用户名</label>
-              <input type="text" class="form-control" name="username" id="username" value="lightyear" disabled="disabled"/>
+              <input type="text" class="form-control" name="username" id="username" value="{{ admin.adminname }}" disabled="disabled"/>
             </div>
+
+            <div class="form-group">
+              <label for="permission">权限</label>
+              <input type="text" class="form-control" name="permission" id="permission" value="{{ admin.permission }}" disabled="disabled"/>
+            </div>
+
             <div class="form-group">
               <label for="nickname">昵称</label>
-              <input type="text" class="form-control" name="nickname" id="nickname" placeholder="输入您的昵称" value="后台管理模板">
+              <input type="text" class="form-control" name="nickname" id="nickname" placeholder="输入您的昵称" value="{{ admin.nickname }}">
             </div>
+
             <div class="form-group">
               <label for="email">邮箱</label>
-              <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp" placeholder="请输入正确的邮箱地址" value="3331653644@qq.com">
+              <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp" placeholder="请输入正确的邮箱地址" value="{{ admin.email }}">
+              {% if not admin.email %}
               <small id="emailHelp" class="form-text text-muted">请保证您填写的邮箱地址是正确的。</small>
+              {% endif %}
             </div>
+
             <div class="form-group">
-              <label for="remark">简介</label>
-              <textarea class="form-control" name="remark" id="remark" rows="3"></textarea>
+              <label for="brief">简介</label>
+                <textarea class="form-control" name="brief" id="brief" rows="3" placeholder="请输入跟个人简介。">{{ admin.brief }}</textarea>
             </div>
+
+            {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                      {% for message in messages %}
+                        {% if success %}
+                          <div class="alert alert-success" role="alert">
+                              {{ message }}
+                          </div>
+                        {% else %}
+                          <div class="alert alert-danger" role="alert">
+                              {{ message }}
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                  {% endif %}
+              {% endwith %}
+
             <button type="submit" class="btn btn-primary">保存</button>
           </form>
  
