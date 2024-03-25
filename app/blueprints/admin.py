@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash, current_app
-from moduls import AdminModel
+from app.moduls import AdminModel
 from sqlalchemy.sql import exists
-from forms import AdminLoginForm, AdminProfileForm, AdminAddForm
+from app.forms import AdminLoginForm, AdminProfileForm, AdminAddForm
 from werkzeug.security import check_password_hash, generate_password_hash
-from exts import db
+from extensions import db
 import os
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')

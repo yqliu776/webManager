@@ -1,4 +1,4 @@
-from exts import db
+from extensions import db
 
 
 class AdminModel(db.Model):
