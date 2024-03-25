@@ -1,6 +1,6 @@
-from moduls import AdminModel
+from app.moduls import AdminModel
 from flask import jsonify
-from exts import db
+from extensions import db
 from flask_restful import Resource
 
 
