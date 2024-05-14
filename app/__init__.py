@@ -1,4 +1,4 @@
-from app.blueprints import admin_bp, debug_bp
+from app.blueprints import main_bp, admin_bp, debug_bp
 from flask_migrate import Migrate
 from app.api import Admins, Admin
 from flask_restful import Api
@@ -12,6 +12,7 @@ def create_app():
                 template_folder='templates',
                 static_folder='static')
     app.config.from_object(config)
+    app.register_blueprint(main_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(debug_bp)
     Api(app).add_resource(Admins, '/api/admins')

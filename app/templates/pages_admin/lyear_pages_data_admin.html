@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>管理员账户</title>
+<link rel="icon" href="favicon.ico" type="image/ico">
+<link href="../static/css/bootstrap.min.css" rel="stylesheet">
+<link href="../static/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="../static/css/animate.css" rel="stylesheet">
+<link href="../static/css/style.min.css" rel="stylesheet">
+<link href="../static/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container-fluid p-t-15">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header"><h4>所有管理员</h4></div>
+        <div class="card-body">
+          <div id="toolbar" class="toolbar-btn-action">
+            <button id="btn_add" type="button" class="btn btn-primary m-r-5" style="display: none;" onclick="addAdmin()">
+              <span class="mdi mdi-plus" aria-hidden="true"></span>新增
+            </button>
+            <button id="btn_delete" type="button" class="btn btn-danger" style="display: none;" onclick="deleteSelected()">
+              <span class="mdi mdi-window-close" aria-hidden="true"></span>删除
+            </button>
+          </div>
+          <table id="tb_admin"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../static/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap-table/bootstrap-table.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+
+<!--行内编辑插件-->
+<link href="../static/js/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.min.css" rel="stylesheet">
+<script type="text/javascript" src="../static/js/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>
+
+<script type="text/javascript" src="../static/js/main.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    const userPermission = {{ permission }};  // 从后端模板变量中获取权限信息
+
+    if (userPermission === 1) {
+        $('#btn_add').show();
+        $('#btn_delete').show();
+    }
+});
+
+$('#tb_admin').bootstrapTable({
+    classes: 'table table-bordered table-hover table-striped',
+    url: '/api/admins',
+    method: 'get',
+    uniqueId: 'id',
+    idField: 'id',
+    toolbar: '#toolbar',
+    showColumns: true,
+    showRefresh: true,
+    pagination: true,
+    sidePagination: 'server', // 使用服务器端分页
+    sortOrder: "asc",
+    queryParams: function(params) {
+        var temp = {
+            limit: params.limit,
+            page: params.offset / params.limit + 1,
+            sort: params.sort,
+            order: params.order
+        };
+        return temp;
+    },
+    responseHandler: function(res) {
+        // 处理后端返回的数据格式
+        return {
+            total: res.total,
+            rows: res.rows
+        };
+    },
+    pageNumber: 1,
+    pageSize: 10,
+    pageList: [10, 25, 50, 100],
+    columns: [{
+        checkbox: true
+    }, {
+        field: 'id',
+        title: 'ID',
+        sortable: true
+    }, {
+        field: 'adminname',
+        title: '用户名'
+    }, {
+        field: 'nickname',
+        title: '昵称'
+    }, {
+        field: 'email',
+        title: '电子邮箱'
+    }, {
+        field: 'permission',
+        title: '权限'
+    }, {
+        field: 'status',
+        title: '状态',
+        editable: {
+            type: 'select',
+            title: "状态",
+            source: [
+                { value: 0, text: '禁用'},
+                { value: 1, text: '正常'}
+            ],
+            noeditFormatter: function (value, row, index) {
+                var result;
+                if (value == 0 || value == '禁用') {
+                    result = { filed: "status", value: "禁用", class: "label label-danger" };
+                } else if (value == 1 || value == '正常') {
+                    result = { filed: "status", value: "正常", class: "label label-success" };
+                }
+                return result;
+            },
+            url: '/api/admins/editStatus',
+            ajaxOptions: {
+                type: 'post',
+                dataType: 'json'
+            },
+            success: function(response, newValue) {
+                if (response.code == '200') {
+                    $('#tb_admin').bootstrapTable('updateCellById', {id: response.id, field: 'status', value: newValue});
+                } else {
+                    return response.msg;
+                }
+            },
+            highlight: false
+        }
+    }],
+    onLoadSuccess: function(data){
+        $("[data-toggle='tooltip']").tooltip();
+    }
+});
+
+function addAdmin() {
+    window.location.href = '/admin/add_admin';
+}
+
+function deleteSelected() {
+    var ids = $.map($('#tb_admin').bootstrapTable('getSelections'), function (row) {
+        return row.id;
+    });
+
+    if (ids.length > 0) {
+        if (confirm('确定要删除选中的管理员吗？')) {
+            $.each(ids, function (index, id) {
+                delAdmin(id);
+            });
+        }
+    } else {
+        alert('请选择要删除的管理员');
+    }
+}
+
+function delAdmin(id) {
+    $.ajax({
+        url: '/api/admin/' + id,
+        type: 'DELETE',
+        success: function(result) {
+            $('#tb_admin').bootstrapTable('refresh');  // 刷新表格数据
+            alert('删除成功');
+        }
+    });
+}
+</script>
+</body>
+</html>
