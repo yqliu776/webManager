@@ -136,7 +136,6 @@ def add_admin():
     Add an administrator
     :return:
     """
-    # 如果是 GET 请求，则返回添加管理员的页面
     if request.method == 'GET':
         if 'admin_id' in session:
             if session.get('permission') == 1:
@@ -147,30 +146,23 @@ def add_admin():
         else:
             return render_template('pages/lyear_pages_login.html')
     else:
-        # 获取管理员添加表单，并验证表单格式是否正确
         form = AdminAddForm(request.form)
         if form.validate():
-            # 获取管理员的姓名、密码和权限等信息
             adminname = form.adminname.data
             password = form.password.data
             permission = form.Permission.data
-            # 查询数据库中是否已经存在该管理员
             scalar = db.session.query(exists().where(AdminModel.adminname == adminname))
             if scalar.scalar():
-                # 如果已经存在该管理员，则返回错误页面
                 flash('该管理员已经存在！', 'danger')
                 return render_template('pages/lyear_pages_add_admin.html')
             else:
                 hash_pwd = generate_password_hash(password)
-                # 创建管理员对象，并将其添加到数据库中
                 admin = AdminModel(adminname=adminname, password=hash_pwd, permission=permission, avatar="avatar.jpg")
                 db.session.add(admin)
                 db.session.commit()
-                # 添加成功，返回反馈信息
-                flash('添加成功！', 'danger')
-                return render_template('pages/lyear_pages_add_admin.html')
+                flash('添加成功！', 'success')
+                return render_template('pages/lyear_pages_add_admin.html', redirect_url=url_for('admin.manage_admin'))
         else:
-            # 如果表单格式不正确，则返回错误页面
             flash('用户名或密码格式错误！', 'danger')
             return render_template('pages/lyear_pages_add_admin.html')
 
@@ -201,7 +193,7 @@ def change_avatar():
                 # 更新数据库中的头像信息
                 admin.avatar = filename
                 db.session.commit()
-                flash('头像更新成功！', 'danger')
+                flash('头像更新成功！', 'success')
                 return render_template('pages/lyear_pages_profile.html', admin=admin)
             else:
                 flash('请上传符合要求的图片文件！', 'danger')
@@ -214,13 +206,12 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
 
 
-'''
-@bp.route('/manage_admin', methods=['GET'])
+@bp.route('/manage_admin')
 def manage_admin():
     if 'admin_id' in session:
-        is_logged_in = True
-        return render_template('admin/manage_admin.html', is_logged_in=is_logged_in)
+        permission = session.get('permission')
+        return render_template('pages/lyear_pages_data_admin.html', permission=permission)
     else:
-        return render_template('admin/login_admin.html')
+        return render_template('pages/lyear_pages_data_admin.html')
 
-'''
+

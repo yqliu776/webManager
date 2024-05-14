@@ -32,22 +32,10 @@
               <ul class="nav nav-drawer">
                 <li class="nav-item active"> <a href="{{ url_for('admin.index') }}"><i class="mdi mdi-home"></i> 后台首页</a> </li>
                 <li class="nav-item nav-item-has-subnav">
-                  <a href="javascript:void(0)"><i class="mdi mdi-palette"></i> UI 元素</a>
+                  <a href="javascript:void(0)"><i class="mdi mdi-palette"></i> 账户管理</a>
                   <ul class="nav nav-subnav">
-                    <li> <a class="multitabs" href="lyear_ui_buttons.html">按钮</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_cards.html">卡片</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_grid.html">格栅</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_icons.html">图标</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_tables.html">表格</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_modals.html">模态框</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_tooltips_popover.html">提示 / 弹出框</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_alerts.html">警告框</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_pagination.html">分页</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_progress.html">进度条</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_tabs.html">标签页</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_typography.html">排版</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_step.html">步骤</a> </li>
-                    <li> <a class="multitabs" href="lyear_ui_other.html">其他</a> </li>
+                    <li> <a class="multitabs" href="{{ url_for('admin.manage_admin') }}">管理员账户</a> </li>
+                    <li> <a class="multitabs" href="{{ url_for('admin.index') }}">用户账户</a> </li>
                   </ul>
                 </li>
                 <li class="nav-item nav-item-has-subnav">
@@ -139,7 +127,6 @@
                   <ul class="dropdown-menu dropdown-menu-right">
                     <li> <a class="multitabs" data-url="profile" href="javascript:void(0)"><i class="mdi mdi-account"></i> 个人信息</a> </li>
                     <li> <a class="multitabs" data-url="edit_pwd" href="javascript:void(0)"><i class="mdi mdi-lock-outline"></i> 修改密码</a> </li>
-                    <li> <a class="multitabs" data-url="add_admin" href="javascript:void(0)"><i class="mdi mdi-lock-outline"></i> 添加店员</a></li>
                     <li class="divider"></li>
                     <li> <a href="{{ url_for('admin.logout') }}"><i class="mdi mdi-logout-variant"></i> 退出登录</a> </li>
                   </ul>

@@ -28,37 +28,50 @@
               <input type="password" class="form-control" name="password" id="password" placeholder="输入密码" required>
             </div>
 
-            <p class="m-t-10">请选择权限等级，当前等级店长，不建议选择。</p>
+            <p class="m-t-10">请选择给予权限等级：</p>
             <div class="form-group">
               <label class="lyear-radio radio-inline radio-primary">
-                <input type="radio" name="Permission" value=1 id="Permission1"><span>店长</span>
+                <input type="radio" name="Permission" value=1 id="Permission1"><span>最高</span>
               </label>
               <label class="lyear-radio radio-inline radio-primary">
-                <input type="radio" name="Permission" value=2 id="Permission2"><span>一般店员</span>
+                <input type="radio" name="Permission" value=2 id="Permission2"><span>一般</span>
               </label>
               <label class="lyear-radio radio-inline radio-primary">
-                <input type="radio" name="Permission" value=3 id="Permission3"><span>监督员</span>
+                <input type="radio" name="Permission" value=3 id="Permission3"><span>最低</span>
               </label>
             </div>
 
-              {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-              {% endwith %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}" role="alert">
+                    {{ message }}
+                    {% if category == 'success' %}
+                      <div id="success-message">
+                        3秒后返回，点击取消按钮来继续添加：
+                        <button id="cancel-button" class="btn btn-secondary btn-sm">取消</button>
+                      </div>
+                      <script type="text/javascript">
+                        var timer = setTimeout(function() {
+                          window.location.href = "{{ url_for('admin.manage_admin') }}";
+                        }, 3000);
+                        document.getElementById('cancel-button').onclick = function() {
+                          clearTimeout(timer);
+                          document.getElementById('success-message').style.display = 'none';
+                        };
+                      </script>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
 
             <button type="submit" class="btn btn-primary">添加管理员</button>
           </form>
         </div>
       </div>
     </div>
-
   </div>
-
 </div>
 
 <script type="text/javascript" src="../../static/js/jquery.min.js"></script>
