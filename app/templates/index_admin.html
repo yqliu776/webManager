@@ -32,10 +32,10 @@
               <ul class="nav nav-drawer">
                 <li class="nav-item active"> <a href="{{ url_for('admin.index') }}"><i class="mdi mdi-home"></i> 后台首页</a> </li>
                 <li class="nav-item nav-item-has-subnav">
-                  <a href="javascript:void(0)"><i class="mdi mdi-palette"></i> 账户管理</a>
+                  <a href="javascript:void(0)"><i class="mdi mdi-account"></i> 账户管理</a>
                   <ul class="nav nav-subnav">
                     <li> <a class="multitabs" href="{{ url_for('admin.manage_admin') }}">管理员账户</a> </li>
-                    <li> <a class="multitabs" href="{{ url_for('admin.manage_admin') }}">用户账户</a> </li>
+                    <li> <a class="multitabs" href="{{ url_for('admin.manage_users') }}">用户账户</a> </li>
                   </ul>
                 </li>
                 <li class="nav-item nav-item-has-subnav">

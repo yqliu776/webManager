@@ -22,5 +22,8 @@ def print_dir_tree(start_path, skip_prefix='.'):
             print(f"{sub_indent}{f}")
 
 
+
+
+
 if __name__ == '__main__':
     print_dir_tree(os.getcwd())

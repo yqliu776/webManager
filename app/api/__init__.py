@@ -3,4 +3,4 @@ import sys
 
 current_dir = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(current_dir)
-from admin_api import Admins, Admin
+from admin_api import Admins, Admin, Members, Member
