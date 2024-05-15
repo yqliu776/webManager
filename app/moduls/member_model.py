@@ -17,6 +17,7 @@ class MemberModel(db.Model):
     member_name = db.Column(db.String(200), nullable=False)
     gender = db.Column(db.Integer, default=-1)  # 默认值为-1
     account_balance = db.Column(db.Integer, default=0)
+    cumulative_points = db.Column(db.Integer, default=0)
     recharge_record = db.Column(db.Text)  # 时间+金额的字符串记录
 
     def __init__(self, card_number, phone_number, member_name, gender, membership_level=0):
@@ -47,22 +48,24 @@ class MemberModel(db.Model):
             'member_name': self.member_name,
             'gender': self.gender,
             'account_balance': self.account_balance,
+            'cumulative_points': self.cumulative_points,
             'recharge_record': self.recharge_record
         }
 
     def __repr__(self):
         return '<Member %s>' % self.card_number
 
+    def add_recharge_record(self, amount):
+        """
+        添加会员充值记录
+        :param amount: 充值金额
+        """
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        record = f"{timestamp}+{amount};"
+        if self.recharge_record:
+            self.recharge_record += record
+        else:
+            self.recharge_record = record
 
-# 示例添加充值记录的方法
-def add_recharge_record(self, amount):
-    """
-    添加会员充值记录
-    :param amount: 充值金额
-    """
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    record = f"{timestamp}+{amount};"
-    if self.recharge_record:
-        self.recharge_record += record
-    else:
-        self.recharge_record = record
+
+

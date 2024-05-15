@@ -212,6 +212,13 @@ def manage_admin():
         permission = session.get('permission')
         return render_template('pages_admin/lyear_pages_data_admin.html', permission=permission)
     else:
-        return render_template('pages_admin/lyear_pages_data_admin.html')
+        return render_template(url_for('admin.login'))
 
 
+@bp.route('/manage_users')
+def manage_users():
+    if 'admin_id' in session:
+        permission = session.get('permission')
+        return render_template('pages_admin/lyear_pages_data_member.html', permission=permission)
+    else:
+        return redirect(url_for('admin.login'))
