@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>订单管理</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="../static/css/animate.css" rel="stylesheet">
+    <link href="../static/css/style.min.css" rel="stylesheet">
+    <link href="../static/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <style>
+        .summary-box .box { padding: 15px; border-radius: 5px; color: white; text-align: center; width: 18%; }
+        .toolbar-btn-action { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+<div class="container-fluid p-t-15">
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- Search and Toolbar -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="toolbar-btn-action">
+                        <input type="text" id="search_input" class="form-control" placeholder="订单号/用户ID" style="width: 300px; display: inline-block;">
+                        <button id="btn_search" type="button" class="btn btn-primary m-r-5" onclick="searchOrders()">查询</button>
+                        <button id="btn_add" type="button" class="btn btn-success m-r-5" style="display: none;" onclick="addOrder()">
+                            <span class="mdi mdi-plus" aria-hidden="true"></span>创建订单
+                        </button>
+                        <button id="btn_import" type="button" class="btn btn-info m-r-5">
+                            批量导入
+                        </button>
+                        <button id="btn_export" type="button" class="btn btn-warning m-r-5">
+                            订单导出
+                        </button>
+                        <button id="btn_delete" type="button" class="btn btn-danger m-r-5" style="display: none;" onclick="deleteSelected()">
+                            <span class="mdi mdi-window-close" aria-hidden="true"></span>删除订单
+                        </button>
+                    </div>
+                    <table id="tb_order"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../static/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap-table/bootstrap-table.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<!-- 行内编辑插件 -->
+<link href="../static/js/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.min.css" rel="stylesheet">
+<script type="text/javascript" src="../static/js/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>
+<script type="text/javascript" src="../static/js/main.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    const userPermission = {{ permission }};  // 从后端模板变量中获取权限信息
+
+    if (userPermission === 1) {
+        $('#btn_add').show();
+        $('#btn_delete').show();
+    }
+
+    $('#tb_order').bootstrapTable({
+        classes: 'table table-bordered table-hover table-striped',
+        url: '/api/orders',
+        method: 'get',
+        uniqueId: 'id',
+        idField: 'id',
+        toolbar: '#toolbar',
+        showColumns: true,
+        showRefresh: true,
+        pagination: true,
+        sidePagination: 'server', // 使用服务器端分页
+        sortOrder: "asc",
+        queryParams: function(params) {
+            var temp = {
+                limit: params.limit,
+                page: params.offset / params.limit + 1,
+                sort: params.sort,
+                order: params.order,
+                search: $('#search_input').val()  // 添加搜索参数
+            };
+            return temp;
+        },
+        responseHandler: function(res) {
+            // 处理后端返回的数据格式
+            return {
+                total: res.total,
+                rows: res.rows
+            };
+        },
+        pageNumber: 1,
+        pageSize: 10,
+        pageList: [10, 25, 50, 100],
+        columns: [{
+            checkbox: true
+        }, {
+            field: 'order_number',
+            title: '订单号',
+            sortable: true
+        }, {
+            field: 'user_id',
+            title: '用户ID'
+        }, {
+            field: 'total_price',
+            title: '总价格'
+        }, {
+            field: 'status',
+            title: '订单状态'
+        }, {
+            field: 'created_at',
+            title: '创建时间'
+        }, {
+            field: 'updated_at',
+            title: '更新时间'
+        }],
+        onLoadSuccess: function(data){
+            $("[data-toggle='tooltip']").tooltip();
+        }
+    });
+
+    // 监听刷新按钮事件
+    $('.fixed-table-toolbar .btn[name="refresh"]').on('click', function() {
+        $('#search_input').val('');
+        $('#tb_order').bootstrapTable('refresh', { query: { search: '' } });
+    });
+
+});
+
+function searchOrders() {
+    // 重新加载表格数据，通过API进行搜索
+    $('#tb_order').bootstrapTable('refresh', {
+        query: {
+            search: $('#search_input').val()
+        }
+    });
+}
+
+function addOrder() {
+    window.location.href = '/admin/add_order';
+}
+
+function deleteSelected() {
+    var ids = $.map($('#tb_order').bootstrapTable('getSelections'), function (row) {
+        return row.id;
+    });
+
+    if (ids.length > 0) {
+        if (confirm('确定要删除选中的订单吗？')) {
+            $.each(ids, function (index, id) {
+                delOrder(id);
+            });
+        }
+    } else {
+        alert('请选择要删除的订单');
+    }
+}
+
+function delOrder(id) {
+    $.ajax({
+        url: '/api/orders/' + id,
+        type: 'DELETE',
+        success: function(result) {
+            $('#tb_order').bootstrapTable('refresh');  // 刷新表格数据
+            alert('删除成功');
+        }
+    });
+}
+</script>
+</body>
+</html>

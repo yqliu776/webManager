@@ -1,5 +1,6 @@
 from extensions import db
 
+
 class AdminModel(db.Model):
     """
     管理员 数据表 模型
