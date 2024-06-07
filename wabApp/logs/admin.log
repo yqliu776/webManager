@@ -1,0 +1,25 @@
+2024-05-17 02:06:43,871 - admin - INFO - Admin kevin accessed index page
+2024-05-17 02:17:28,010 - admin - INFO - Admin kevin accessed index page
+2024-05-17 02:21:09,038 - admin - INFO - Admin kevin accessed index page
+2024-05-17 02:22:08,581 - admin - INFO - Admin kevin accessed index page
+2024-05-17 02:22:33,355 - admin - INFO - Admin kevin accessed index page
+2024-05-17 02:36:47,916 - admin - INFO - Admin kevin accessed index page
+2024-05-19 20:52:05,334 - admin - INFO - Admin kevin logged in successfully
+2024-05-19 20:52:05,353 - admin - INFO - Admin kevin accessed index page
+2024-05-21 15:47:01,717 - admin - INFO - Admin kevin logged in successfully
+2024-05-21 15:47:01,734 - admin - INFO - Admin kevin accessed index page
+2024-05-21 15:48:06,916 - admin - INFO - Admin ywk001 added successfully by Admin ID 1
+2024-05-23 02:06:48,240 - admin - INFO - Admin kevin logged in successfully
+2024-05-23 02:06:48,244 - admin - INFO - Admin kevin accessed index page
+2024-06-01 15:43:18,263 - admin - INFO - Admin kevin logged in successfully
+2024-06-01 15:43:18,277 - admin - INFO - Admin kevin accessed index page
+2024-06-01 15:43:33,892 - admin - INFO - Admin kevin logged out
+2024-06-06 02:06:05,259 - admin - WARNING - Failed login attempt for non-existent admin: keivn
+2024-06-06 02:12:42,993 - admin - INFO - Admin kevin logged in successfully
+2024-06-06 02:12:43,001 - admin - INFO - Admin kevin accessed index page
+2024-06-06 02:15:52,747 - admin - INFO - Admin kevin accessed index page
+2024-06-08 01:24:21,032 - admin - WARNING - Failed login attempt for admin: kevin
+2024-06-08 01:24:25,811 - admin - INFO - Admin kevin logged in successfully
+2024-06-08 01:24:25,819 - admin - INFO - Admin kevin accessed index page
+2024-06-08 01:30:58,062 - admin - INFO - Admin kevin accessed index page
+2024-06-08 01:38:14,104 - admin - INFO - Admin kevin updated their profile

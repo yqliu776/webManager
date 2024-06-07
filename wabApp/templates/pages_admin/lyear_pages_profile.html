@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>个人信息 - 后台管理系统模板</title>
+<link rel="icon" href="../../static/favicon.ico" type="image/ico">
+<link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../static/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="../../static/css/style.min.css" rel="stylesheet">
+</head>
+  
+<body>
+<div class="container-fluid p-t-15">
+  
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+            <form action="{{ url_for('admin.change_avatar') }}" method="post" enctype="multipart/form-data">
+                <div class="edit-avatar">
+                    <img src="../../static/images/users/{{ admin.avatar }}" alt="..." class="img-avatar">
+                    <div class="avatar-divider"></div>
+                    <div class="edit-avatar-content">
+                        <!-- 隐藏原始文件输入 -->
+                        <input type="file" name="avatar" accept="image/*" class="btn btn-default" id="fileInput" style="display: none;">
+                        <!-- 添加一个按钮来触发文件选择 -->
+                        <button type="button" class="btn btn-primary" id="uploadButton">上传头像</button>
+                    </div>
+                </div>
+            </form>
+          <hr>
+          <form method="post" action="{{ url_for('admin.profile') }}" class="site-form">
+            <div class="form-group">
+              <label for="username">用户名</label>
+              <input type="text" class="form-control" name="username" id="username" value="{{ admin.adminname }}" disabled="disabled"/>
+            </div>
+
+            <div class="form-group">
+              <label for="permission">权限</label>
+                {% if admin.permission == 1 %}
+                    <input type="text" class="form-control" name="permission" id="permission" value="店长" disabled="disabled"/>
+                {% elif admin.permission == 2 %}
+                    <input type="text" class="form-control" name="permission" id="permission" value="一般店员" disabled="disabled"/>
+                {% elif admin.permission == 3 %}
+                    <input type="text" class="form-control" name="permission" id="permission" value="监督员" disabled="disabled"/>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="nickname">昵称</label>
+              <input type="text" class="form-control" name="nickname" id="nickname" placeholder="输入您的昵称" value="{{ admin.nickname }}">
+            </div>
+
+            <div class="form-group">
+              <label for="email">邮箱</label>
+              <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp" placeholder="请输入正确的邮箱地址" value="{{ admin.email }}">
+              {% if not admin.email %}
+              <small id="emailHelp" class="form-text text-muted">请保证您填写的邮箱地址是正确的。</small>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="brief">简介</label>
+                <textarea class="form-control" name="brief" id="brief" rows="3" placeholder="请输入跟个人简介。">{{ admin.brief }}</textarea>
+            </div>
+
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+              {% endwith %}
+
+            <button type="submit" class="btn btn-primary">保存</button>
+          </form>
+ 
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+</div>
+
+<script type="text/javascript" src="../../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../static/js/main.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#uploadButton').click(function() {
+            $('#fileInput').click();  // 触发文件选择窗口
+        });
+        $('#fileInput').change(function() {
+            $(this).closest('form').submit();  // 当文件选择后，自动提交表单
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+2024-06-08 01:24:02,979 - wabApp - INFO - App starting...
+2024-06-08 01:24:32,420 - wabApp - ERROR - Exception on /admin/change_avatar [POST]
+Traceback (most recent call last):
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask\app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask\app.py", line 872, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask_restful\__init__.py", line 298, in error_router
+    return original_handler(e)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask_cors\extension.py", line 178, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask\app.py", line 870, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask\app.py", line 855, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\Projects\webApp\wabApp\blueprints\admin.py", line 212, in change_avatar
+    if file and Rules.allowed_file(file.filename):
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Rules.allowed_file() missing 1 required positional argument: 'filename'
+2024-06-08 01:28:31,758 - wabApp - INFO - App starting...
+2024-06-08 01:28:46,608 - wabApp - ERROR - Exception on /admin/change_avatar [POST]
+Traceback (most recent call last):
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask\app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask\app.py", line 872, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask_restful\__init__.py", line 298, in error_router
+    return original_handler(e)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask_cors\extension.py", line 178, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask\app.py", line 870, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask\app.py", line 855, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\Projects\webApp\wabApp\blueprints\admin.py", line 213, in change_avatar
+    if file and Rules.allowed_file(file.filename):
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Rules.allowed_file() missing 1 required positional argument: 'filename'
+2024-06-08 01:30:45,615 - wabApp - INFO - App starting...
+2024-06-08 01:36:41,669 - wabApp - INFO - App starting...
+2024-06-08 01:37:02,792 - wabApp - ERROR - Exception on /admin/change_avatar [POST]
+Traceback (most recent call last):
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask\app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask\app.py", line 872, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask_restful\__init__.py", line 298, in error_router
+    return original_handler(e)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask_cors\extension.py", line 178, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask\app.py", line 870, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\env\webApp\Lib\site-packages\flask\app.py", line 855, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\Pycharm\Projects\webApp\wabApp\blueprints\admin.py", line 213, in change_avatar
+    if file and Rules.allowed_file(file.filename):
+                ^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'Rules' has no attribute 'allowed_file'
+2024-06-08 01:37:41,895 - wabApp - INFO - App starting...

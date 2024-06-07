@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>添加管理员 - 后台管理系统模板</title>
+<link rel="icon" href="../../static/favicon.ico" type="image/ico">
+<link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../static/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="../../static/css/style.min.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container-fluid p-t-15">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <form method="post" action="{{ url_for('admin.add_admin') }}" class="site-form">
+            <div class="form-group">
+              <label for="adminname">用户名</label>
+              <input type="text" class="form-control" name="adminname" id="adminname" placeholder="输入店员用户名" required>
+            </div>
+
+            <div class="form-group">
+              <label for="password">密码</label>
+              <input type="password" class="form-control" name="password" id="password" placeholder="输入密码" required>
+            </div>
+
+            <p class="m-t-10">请选择给予权限等级：</p>
+            <div class="form-group">
+              <label class="lyear-radio radio-inline radio-primary">
+                <input type="radio" name="Permission" value=1 id="Permission1"><span>最高</span>
+              </label>
+              <label class="lyear-radio radio-inline radio-primary">
+                <input type="radio" name="Permission" value=2 id="Permission2"><span>一般</span>
+              </label>
+              <label class="lyear-radio radio-inline radio-primary">
+                <input type="radio" name="Permission" value=3 id="Permission3"><span>最低</span>
+              </label>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}" role="alert">
+                    {{ message }}
+                    {% if category == 'success' %}
+                      <div id="success-message">
+                        3秒后返回，点击取消按钮来继续添加：
+                        <button id="cancel-button" class="btn btn-secondary btn-sm">取消</button>
+                      </div>
+                      <script type="text/javascript">
+                        var timer = setTimeout(function() {
+                          window.location.href = "{{ url_for('admin.manage_admin') }}";
+                        }, 3000);
+                        document.getElementById('cancel-button').onclick = function() {
+                          clearTimeout(timer);
+                          document.getElementById('success-message').style.display = 'none';
+                        };
+                      </script>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <button type="submit" class="btn btn-primary">添加管理员</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="../../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../static/js/main.min.js"></script>
+</body>
+</html>
