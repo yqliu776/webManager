@@ -1,0 +1,43 @@
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - SECRET_KEY=woshinibabaliuyongqi
+      - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:090910@db:3306/web_manager
+    volumes:
+          - D:\Documents\Pycharm\logs:/wabApp/wabApp/logs
+
+  db:
+    image: mysql:5.7
+    restart: always
+    command: [
+      '--default-authentication-plugin=mysql_native_password',
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_general_ci',
+      '--explicit_defaults_for_timestamp=true',
+      '--lower_case_table_names=1',
+    ]
+    environment:
+      MYSQL_ROOT_PASSWORD: '090910'
+      MYSQL_DATABASE: 'web_manager'
+      MYSQL_INITDB_SKIP_TZINFO: 'Asia/Shanghai'
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # 初始化SQL脚本
+      - ./web_manager.sql:/docker-entrypoint-initdb.d/web_manager.sql
+    ports:
+      - 3336:3306
+    healthcheck:  # 健康检查配置
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data:
